@@ -52,7 +52,7 @@ rm main.zip
 
 instance2 The following script should do everything for you:
 ```
-wget https://github.com/Halmand/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance/archive/refs/heads/main.zip
+wget https://github.com/Askie666/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance/archive/refs/heads/main.zip
 unzip main.zip "dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance-main/*" -d /data
 mv /data/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance-main /data/dbus-shelly-1pm-pvinverter02
 chmod a+x /data/dbus-shelly-1pm-pvinverter02/install.sh
@@ -64,7 +64,7 @@ rm main.zip
 
 instance3 The following script should do everything for you:
 ```
-wget https://github.com/Halmand/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance/archive/refs/heads/main.zip
+wget https://github.com/Askie666/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance/archive/refs/heads/main.zip
 unzip main.zip "dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance-main/*" -d /data
 mv /data/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance-main /data/dbus-shelly-1pm-pvinverter03
 chmod a+x /data/dbus-shelly-1pm-pvinverter03/install.sh
