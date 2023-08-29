@@ -54,6 +54,15 @@ class DbusShelly1pmService:
     self._dbusservice.add_path('/UpdateIndex', 0)
     self._dbusservice.add_path('/StatusCode', 0)  # Dummy path so VRM detects us as a PV-inverter.
     
+    # Set Mode to 2 to show it as ON
+    # 2=On;4=Off;5=Eco
+    self._dbusservice.add_path("/Mode", 2)
+    # set the SystemState flaf to 9=Inverting
+    # /SystemState/State     ->   0: Off
+    #                        ->   1: Low power
+    #                        ->   9: Inverting
+    self._dbusservice.add_path("/State", 9)
+
     # add path values to dbus
     for path, settings in self._paths.items():
       self._dbusservice.add_path(
@@ -161,8 +170,8 @@ class DbusShelly1pmService:
        plusPmSupport = str(config['DEFAULT']['PlusPmSupport'])
 
        #send data to DBus
-       for phase in ['L1', 'L2', 'L3']:
-         pre = '/Ac/' + phase
+       for phase in ['L1']:
+         pre = '/Ac/Out/' + phase
 
          if phase == pvinverter_phase and plusPmSupport == 'True':
              power = meter_data['switch:0']['apower']
@@ -170,11 +179,9 @@ class DbusShelly1pmService:
              voltage = meter_data['switch:0']['voltage']
              current = power / voltage
 
-             self._dbusservice[pre + '/Voltage'] = voltage
-             self._dbusservice[pre + '/Current'] = current
-             self._dbusservice[pre + '/Power'] = power
-             if power > 0:
-                 self._dbusservice[pre + '/Energy/Forward'] = total/1000
+             self._dbusservice[pre + '/V'] = voltage
+             self._dbusservice[pre + '/I'] = current
+             self._dbusservice[pre + '/P'] = power
 
          elif phase == pvinverter_phase:
 
@@ -183,25 +190,22 @@ class DbusShelly1pmService:
              voltage = 230
              current = power / voltage
            
-             self._dbusservice[pre + '/Voltage'] = voltage
-             self._dbusservice[pre + '/Current'] = current
-             self._dbusservice[pre + '/Power'] = power
-             if power > 0:
-                 self._dbusservice[pre + '/Energy/Forward'] = total/1000/60
+             self._dbusservice[pre + '/V'] = voltage
+             self._dbusservice[pre + '/I'] = current
+             self._dbusservice[pre + '/P'] = power
            
          else:
-           self._dbusservice[pre + '/Voltage'] = 0
-           self._dbusservice[pre + '/Current'] = 0
-           self._dbusservice[pre + '/Power'] = 0
-           self._dbusservice[pre + '/Energy/Forward'] = 0
+           self._dbusservice[pre + '/V'] = 0
+           self._dbusservice[pre + '/I'] = 0
+           self._dbusservice[pre + '/P'] = 0
            
-       self._dbusservice['/Ac/Power'] = self._dbusservice['/Ac/' + pvinverter_phase + '/Power']
-       self._dbusservice['/Ac/Energy/Forward'] = self._dbusservice['/Ac/' + pvinverter_phase + '/Energy/Forward']
+       #self._dbusservice['/Ac/Power'] = self._dbusservice['/Ac/' + pvinverter_phase + '/Power']
+       #self._dbusservice['/Ac/Energy/Forward'] = self._dbusservice['/Ac/' + pvinverter_phase + '/Energy/Forward']
        
        #logging
-       logging.debug("House Consumption (/Ac/Power): %s" % (self._dbusservice['/Ac/Power']))
-       logging.debug("House Forward (/Ac/Energy/Forward): %s" % (self._dbusservice['/Ac/Energy/Forward']))
-       logging.debug("---");
+       #logging.debug("House Consumption (/Ac/Power): %s" % (self._dbusservice['/Ac/Power']))
+       #logging.debug("House Forward (/Ac/Energy/Forward): %s" % (self._dbusservice['/Ac/Energy/Forward']))
+       #logging.debug("---");
        
        # increment UpdateIndex - to show that new data is available
        index = self._dbusservice['/UpdateIndex'] + 1  # increment index
@@ -262,26 +266,12 @@ def main():
      
       #start our main-service
       pvac_output = DbusShelly1pmService(
-        servicename='com.victronenergy.pvinverter',
+        servicename='com.victronenergy.inverter',
         paths={
-          '/Ac/Energy/Forward': {'initial': None, 'textformat': _kwh}, # energy produced by pv inverter
-          '/Ac/Power': {'initial': 0, 'textformat': _w},
-          
-          '/Ac/Current': {'initial': 0, 'textformat': _a},
-          '/Ac/Voltage': {'initial': 0, 'textformat': _v},
-          
-          '/Ac/L1/Voltage': {'initial': 0, 'textformat': _v},
-          '/Ac/L2/Voltage': {'initial': 0, 'textformat': _v},
-          '/Ac/L3/Voltage': {'initial': 0, 'textformat': _v},
-          '/Ac/L1/Current': {'initial': 0, 'textformat': _a},
-          '/Ac/L2/Current': {'initial': 0, 'textformat': _a},
-          '/Ac/L3/Current': {'initial': 0, 'textformat': _a},
-          '/Ac/L1/Power': {'initial': 0, 'textformat': _w},
-          '/Ac/L2/Power': {'initial': 0, 'textformat': _w},
-          '/Ac/L3/Power': {'initial': 0, 'textformat': _w},
-          '/Ac/L1/Energy/Forward': {'initial': None, 'textformat': _kwh},
-          '/Ac/L2/Energy/Forward': {'initial': None, 'textformat': _kwh},
-          '/Ac/L3/Energy/Forward': {'initial': None, 'textformat': _kwh},
+          '/Ac/Out/L1/P': {'initial': 0, 'textformat': _w},
+          '/Ac/Out/L1/I': {'initial': 0, 'textformat': _a},
+          '/Ac/Out/L1/V': {'initial': 0, 'textformat': _v},
+          '/Dc/0/Voltage': {'initial': 12.8, 'textformat': _v}
         })
      
       logging.info('Connected to dbus, and switching over to gobject.MainLoop() (= event based)')
