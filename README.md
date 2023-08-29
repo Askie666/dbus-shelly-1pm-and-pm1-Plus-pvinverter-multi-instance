@@ -1,9 +1,5 @@
-# dbus-shelly-1pm-pvinverter and shelly pm 1 plus multi-instance
+# dbus-shelly-1pm battery inverter and shelly pm 1 plus multi-instance
 Integrate Shelly 1PM and shelly pm 1 plus into Victron Energies Venus OS
-
-PM1 = https://youtu.be/ki9uB-DL8lA
-
-PM1 PLUS = https://youtu.be/4lI5X2ZwxUE
 
 ## Purpose
 With the scripts in this repo it should be easy possible to install, uninstall, restart a service that connects the Shelly 1PM to the VenusOS and GX devices from Victron.
@@ -13,6 +9,7 @@ Idea is inspired on @fabian-lauer project linked below.
 
 ## Inspiration
 This project is my first on GitHub and with the Victron Venus OS, so I took some ideas and approaches from the following projects - many thanks for sharing the knowledge:
+- https://github.com/Halmand/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance
 - https://github.com/fabian-lauer/dbus-shelly-3em-smartmeter
 - https://shelly-api-docs.shelly.cloud/gen1/#shelly1-shelly1pm
 - https://github.com/victronenergy/venus/wiki/dbus#pv-inverters
@@ -44,7 +41,7 @@ After that call the install.sh script.
 
 instance1 The following script should do everything for  you:
 ```
-wget https://github.com/Halmand/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance/archive/refs/heads/main.zip
+wget https://github.com/Askie666/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance/archive/refs/heads/main.zip
 unzip main.zip "dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance-main/*" -d /data
 mv /data/dbus-shelly-1pm-and-pm1-Plus-pvinverter-multi-instance-main /data/dbus-shelly-1pm-pvinverter01
 chmod a+x /data/dbus-shelly-1pm-pvinverter01/install.sh
